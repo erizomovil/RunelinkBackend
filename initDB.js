@@ -7,7 +7,7 @@ const pool = new Pool({
 
 const fs = require('fs');
 
-const sql = fs.readFileSync('estructura.sql', 'utf-8');
+const sql = fs.readFileSync('estructure.sql', 'utf-8');
 
 (async () => {
   try {
