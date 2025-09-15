@@ -10,101 +10,101 @@ app.get('/', (req, res) => {
   res.send('Esto es runelink!!');
 });
 
-// --- USUARIOS ---
-// Crear un usuario
-app.post('/usuarios', async (req, res) => {
-  const { nombre, email, foto, admin } = req.body;
+// --- USERS ---
+// Create a user
+app.post('/users', async (req, res) => {
+  const { name, email, photo, admin } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO Usuarios (nombre, email, foto, admin) VALUES ($1, $2, $3, $4) RETURNING *',
-      [nombre, email, foto, admin || false]
+      'INSERT INTO Users (name, email, photo, admin) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, email, photo, admin || false]
     );
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error insertando usuario');
+    res.status(500).send('Error inserting user');
   }
 });
 
-// Listar usuarios
-app.get('/usuarios', async (req, res) => {
+// Get all users
+app.get('/users', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM Usuarios');
+    const result = await pool.query('SELECT * FROM Users');
     res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error obteniendo usuarios');
+    res.status(500).send('Error fetching users');
   }
 });
 
-// --- GRUPOS ---
-app.post('/grupos', async (req, res) => {
-  const { nombre, localizacion, mes, dia } = req.body;
+// --- GROUPS ---
+app.post('/groups', async (req, res) => {
+  const { name, location, month, day } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO Grupos (nombre, localizacion, mes, dia) VALUES ($1, $2, $3, $4) RETURNING *',
-      [nombre, localizacion, mes, dia]
+      'INSERT INTO Groups (name, location, month, day) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, location, month, day]
     );
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error creando grupo');
+    res.status(500).send('Error creating group');
   }
 });
 
-app.get('/grupos', async (req, res) => {
+app.get('/groups', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM Grupos');
+    const result = await pool.query('SELECT * FROM Groups');
     res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error obteniendo grupos');
+    res.status(500).send('Error fetching groups');
   }
 });
 
-// --- PERSONAJES ---
-app.post('/personajes', async (req, res) => {
+// --- CHARACTERS ---
+app.post('/characters', async (req, res) => {
   const {
-    nombre, nivel, clase, subclase, experiencia, vida, velocidad,
-    armadura, broams, chips, rucks, frost, frags, foto, id_grupo, id_usuario
+    name, level, class: charClass, subclass, experience, health, speed,
+    armor, broams, chips, rucks, frost, frags, photo, group_id, user_id
   } = req.body;
   try {
     const result = await pool.query(
-      `INSERT INTO Personajes
-      (nombre, nivel, clase, subclase, experiencia, vida, velocidad, armadura, broams, chips, rucks, frost, frags, foto, id_grupo, id_usuario)
+      `INSERT INTO Characters
+      (name, level, class, subclass, experience, health, speed, armor, broams, chips, rucks, frost, frags, photo, group_id, user_id)
       VALUES
       ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) RETURNING *`,
-      [nombre, nivel, clase, subclase, experiencia, vida, velocidad, armadura, broams, chips, rucks, frost, frags, foto, id_grupo, id_usuario]
+      [name, charClass, subclass, experience, health, speed, armor, broams, chips, rucks, frost, frags, photo, group_id, user_id]
     );
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error creando personaje');
+    res.status(500).send('Error creating character');
   }
 });
 
-app.get('/personajes', async (req, res) => {
+app.get('/characters', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM Personajes');
+    const result = await pool.query('SELECT * FROM Characters');
     res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error obteniendo personajes');
+    res.status(500).send('Error fetching characters');
   }
 });
 
 // --- ITEMS ---
 app.post('/items', async (req, res) => {
-  const { nombre, cantidad, peso, id_personaje } = req.body;
+  const { name, quantity, weight, character_id } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO Items (nombre, cantidad, peso, id_personaje) VALUES ($1,$2,$3,$4) RETURNING *',
-      [nombre, cantidad, peso, id_personaje]
+      'INSERT INTO Items (name, quantity, weight, character_id) VALUES ($1,$2,$3,$4) RETURNING *',
+      [name, quantity, weight, character_id]
     );
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error creando item');
+    res.status(500).send('Error creating item');
   }
 });
 
@@ -114,82 +114,82 @@ app.get('/items', async (req, res) => {
     res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error obteniendo items');
+    res.status(500).send('Error fetching items');
   }
 });
 
-// --- SESIONES ---
-app.post('/sesiones', async (req, res) => {
-  const { nombre, fecha, hora, host } = req.body;
+// --- SESSIONS ---
+app.post('/sessions', async (req, res) => {
+  const { name, date, time, host } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO Sesiones (nombre, fecha, hora, host) VALUES ($1,$2,$3,$4) RETURNING *',
-      [nombre, fecha, hora, host]
+      'INSERT INTO Sessions (name, date, time, host) VALUES ($1,$2,$3,$4) RETURNING *',
+      [name, date, time, host]
     );
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error creando sesión');
+    res.status(500).send('Error creating session');
   }
 });
 
-app.get('/sesiones', async (req, res) => {
+app.get('/sessions', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM Sesiones');
+    const result = await pool.query('SELECT * FROM Sessions');
     res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error obteniendo sesiones');
+    res.status(500).send('Error fetching sessions');
   }
 });
 
-// --- SESSIONUSUARIO (relación N:M) ---
-app.post('/sessionusuario', async (req, res) => {
-  const { id_sesion, id_usuario } = req.body;
+// --- SESSIONUSER (N:M relationship) ---
+app.post('/sessionuser', async (req, res) => {
+  const { session_id, user_id } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO SessionUsuario (id_sesion, id_usuario) VALUES ($1,$2) RETURNING *',
-      [id_sesion, id_usuario]
+      'INSERT INTO SessionUser (session_id, user_id) VALUES ($1,$2) RETURNING *',
+      [session_id, user_id]
     );
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error creando relación sesión-usuario');
+    res.status(500).send('Error creating session-user relation');
   }
 });
 
-app.get('/sessionusuario', async (req, res) => {
+app.get('/sessionuser', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM SessionUsuario');
+    const result = await pool.query('SELECT * FROM SessionUser');
     res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error obteniendo relaciones sesión-usuario');
+    res.status(500).send('Error fetching session-user relations');
   }
 });
 
-// --- AJUSTES ---
-app.post('/ajustes', async (req, res) => {
-  const { id_usuario } = req.body;
+// --- SETTINGS ---
+app.post('/settings', async (req, res) => {
+  const { user_id } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO Ajustes (id_usuario) VALUES ($1) RETURNING *',
-      [id_usuario]
+      'INSERT INTO Settings (user_id) VALUES ($1) RETURNING *',
+      [user_id]
     );
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error creando ajustes');
+    res.status(500).send('Error creating settings');
   }
 });
 
-app.get('/ajustes', async (req, res) => {
+app.get('/settings', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM Ajustes');
+    const result = await pool.query('SELECT * FROM Settings');
     res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error obteniendo ajustes');
+    res.status(500).send('Error fetching settings');
   }
 });
 

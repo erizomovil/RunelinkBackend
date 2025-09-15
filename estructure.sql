@@ -1,69 +1,68 @@
--- Tabla Usuarios
-CREATE TABLE IF NOT EXISTS Usuarios (
-    id_usuario SERIAL PRIMARY KEY,
-    nombre VARCHAR(100),
+CREATE TABLE IF NOT EXISTS Users (
+    user_id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
     email VARCHAR(100) UNIQUE,
-    foto TEXT,
+    photo TEXT,
     admin BOOLEAN DEFAULT FALSE
 );
 
--- Tabla Grupos
-CREATE TABLE IF NOT EXISTS Grupos (
-    id_grupo SERIAL PRIMARY KEY,
-    nombre VARCHAR(100),
-    localizacion VARCHAR(100),
-    mes INT,
-    dia INT
+-- Table Groups
+CREATE TABLE IF NOT EXISTS Groups (
+    group_id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    location VARCHAR(100),
+    month INT,
+    day INT
 );
 
--- Tabla Personajes
-CREATE TABLE IF NOT EXISTS Personajes (
-    id_personaje SERIAL PRIMARY KEY,
-    nombre VARCHAR(100),
-    nivel INT,
-    clase VARCHAR(50),
-    subclase VARCHAR(50),
-    experiencia INT,
-    vida INT,
-    velocidad INT,
-    armadura INT,
+-- Table Characters
+CREATE TABLE IF NOT EXISTS Characters (
+    character_id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    level INT,
+    class VARCHAR(50),
+    subclass VARCHAR(50),
+    experience INT,
+    health INT,
+    speed INT,
+    armor INT,
     broams INT,
     chips INT,
     rucks INT,
     frost INT,
     frags INT,
-    foto TEXT,
-    id_grupo INT REFERENCES Grupos(id_grupo),
-    id_usuario INT REFERENCES Usuarios(id_usuario)
+    photo TEXT,
+    group_id INT REFERENCES Groups(group_id),
+    user_id INT REFERENCES Users(user_id)
 );
 
--- Tabla Items
+-- Table Items
 CREATE TABLE IF NOT EXISTS Items (
-    id_item SERIAL PRIMARY KEY,
-    nombre VARCHAR(100),
-    cantidad INT,
-    peso DECIMAL(10,2),
-    id_personaje INT REFERENCES Personajes(id_personaje)
+    item_id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    quantity INT,
+    weight DECIMAL(10,2),
+    character_id INT REFERENCES Characters(character_id)
 );
 
--- Tabla Sesiones
-CREATE TABLE IF NOT EXISTS Sesiones (
-    id_sesion SERIAL PRIMARY KEY,
-    nombre VARCHAR(100),
-    fecha DATE,
-    hora TIME,
+-- Table Sessions
+CREATE TABLE IF NOT EXISTS Sessions (
+    session_id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    date DATE,
+    time TIME,
     host VARCHAR(100)
 );
 
--- Tabla SessionUsuario (relación N:M)
-CREATE TABLE IF NOT EXISTS SessionUsuario (
-    id_sesion INT REFERENCES Sesiones(id_sesion),
-    id_usuario INT REFERENCES Usuarios(id_usuario),
-    PRIMARY KEY (id_sesion, id_usuario)
+-- Table SessionUser (N:M relationship)
+CREATE TABLE IF NOT EXISTS SessionUser (
+    session_id INT REFERENCES Sessions(session_id),
+    user_id INT REFERENCES Users(user_id),
+    PRIMARY KEY (session_id, user_id)
 );
 
--- Tabla Ajustes
-CREATE TABLE IF NOT EXISTS Ajustes (
-    id_ajuste SERIAL PRIMARY KEY,
-    id_usuario INT REFERENCES Usuarios(id_usuario)
+-- Table Settings
+CREATE TABLE IF NOT EXISTS Settings (
+    setting_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES Users(user_id)
 );
