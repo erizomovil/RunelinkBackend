@@ -3,9 +3,7 @@ require('dotenv').config();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false, // ⚡ importante si accedes desde fuera de Render
-  },
+  ssl: process.env.DATABASE_URL.includes("aiven") ? { rejectUnauthorized: false } : false,
 });
 
 module.exports = pool;
