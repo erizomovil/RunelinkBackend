@@ -9,9 +9,6 @@ app.use(express.json());
 // Conexión a PostgreSQL en Aiven
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false, // Permite certificados self-signed de Aiven
-  },
 });
 
 // --- RUTA DE PRUEBA ---
