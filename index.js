@@ -1,17 +1,17 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
-require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Conexión a PostgreSQL en Aiven
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, // tu URL de Render
+  connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false, // Permite certificados self-signed de Aiven
+  },
 });
 
 // --- RUTA DE PRUEBA ---
@@ -20,7 +20,6 @@ app.get('/', (req, res) => {
 });
 
 // --- USERS ---
-// Create a user
 app.post('/users', async (req, res) => {
   const { name, email, photo, admin } = req.body;
   try {
@@ -35,7 +34,6 @@ app.post('/users', async (req, res) => {
   }
 });
 
-// Get all users
 app.get('/users', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM Users');
@@ -152,7 +150,7 @@ app.get('/sessions', async (req, res) => {
   }
 });
 
-// --- SESSIONUSER (N:M relationship) ---
+// --- SESSIONUSER ---
 app.post('/sessionuser', async (req, res) => {
   const { session_id, user_id } = req.body;
   try {
@@ -204,4 +202,4 @@ app.get('/settings', async (req, res) => {
 
 // --- INICIAR SERVIDOR ---
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor en http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
