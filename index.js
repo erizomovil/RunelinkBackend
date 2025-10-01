@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
 const { Pool } = require('pg');
 require('dotenv').config();
 
@@ -11,7 +10,7 @@ app.use(express.json());
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL, // tu URL de Render
   ssl: {
-    ca: fs.readFileSync('./certs/ca.pem').toString()
+    rejectUnauthorized: false
   }
 });
 
