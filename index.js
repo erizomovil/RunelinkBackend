@@ -10,7 +10,7 @@ app.use(express.json());
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL, // tu URL de Render
   ssl: {
-    rejectUnauthorized: false // 🔹 acepta self-signed certificates
+    ca: fs.readFileSync('./certs/ca.pem').toString()
   }
 });
 
