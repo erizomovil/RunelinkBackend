@@ -4,7 +4,7 @@ require('dotenv').config();
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false, // ⚡ importante si accedes desde fuera de Render
+    ca: fs.readFileSync('./ca.crt').toString(), // ruta al certificado Aiven
   },
 });
 
