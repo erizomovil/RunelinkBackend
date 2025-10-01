@@ -1,11 +1,18 @@
 const express = require('express');
 const cors = require('cors');
-const pool = require('./db');
+const { pool } = require('pg');
 require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL, // tu URL de Render
+  ssl: {
+    rejectUnauthorized: false // 🔹 acepta self-signed certificates
+  }
+});
 
 // --- RUTA DE PRUEBA ---
 app.get('/', (req, res) => {
