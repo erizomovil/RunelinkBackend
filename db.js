@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { Pool } = require('pg');
 
-const caPath = "/etc/secrets/ca.pem"; // 👈 o "./ca.pem" según tu caso
+const caPath = "./ca.pem"; 
 console.log("📜 Leyendo certificado de:", caPath);
 console.log("Certificado (primeras 100 chars):", fs.readFileSync(caPath).toString().slice(0, 100));
 
