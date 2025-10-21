@@ -15,15 +15,30 @@ app.get('/', (req, res) => {
 // --- USERS ---
 app.post('/users', async (req, res) => {
   const { name, email, photo, admin } = req.body;
+
   try {
+    // 1️⃣ Verificar si el usuario ya existe
+    const existingUser = await pool.query(
+      'SELECT * FROM Users WHERE email = $1',
+      [email]
+    );
+
+    if (existingUser.rows.length > 0) {
+      // 2️⃣ Si existe, devolverlo directamente
+      return res.json(existingUser.rows[0]);
+    }
+
+    // 3️⃣ Si no existe, insertarlo
     const result = await pool.query(
       'INSERT INTO Users (name, email, photo, admin) VALUES ($1, $2, $3, $4) RETURNING *',
       [name, email, photo, admin || false]
     );
+
     res.json(result.rows[0]);
+
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error inserting user');
+    res.status(500).send('Error inserting or fetching user');
   }
 });
 
