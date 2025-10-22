@@ -80,20 +80,37 @@ app.get('/groups', async (req, res) => {
 // --- CHARACTERS ---
 app.post('/characters', async (req, res) => {
   const {
-    name, level, class: charClass, subclass, experience, health, speed,
-    armor, broams, chips, rucks, frost, frags, photo, group_id, user_id
+    name,
+    level,
+    class: charClass,
+    subclass,
+    experience,
+    health,
+    speed,
+    armor,
+    broams,
+    chips,
+    rucks,
+    frost,
+    frags,
+    photo,
+    group_id,
+    user_id
   } = req.body;
+
   try {
     const result = await pool.query(
       `INSERT INTO Characters
       (name, level, class, subclass, experience, health, speed, armor, broams, chips, rucks, frost, frags, photo, group_id, user_id)
       VALUES
-      ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) RETURNING *`,
-      [name, charClass, subclass, experience, health, speed, armor, broams, chips, rucks, frost, frags, photo, group_id, user_id]
+      ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+      RETURNING *`,
+      [name, level, charClass, subclass, experience, health, speed, armor, broams, chips, rucks, frost, frags, photo, group_id, user_id]
     );
+
     res.json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error("Error creating character:", err);
     res.status(500).send('Error creating character');
   }
 });
