@@ -129,6 +129,26 @@ app.get('/characters/user/:userId', async (req, res) => {
   }
 });
 
+app.get('/characters/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query(
+      'SELECT * FROM Characters WHERE id = $1',
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).send('Character not found');
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error fetching character by id:', err);
+    res.status(500).send('Error fetching character');
+  }
+});
+
 app.get('/characters', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM Characters');
