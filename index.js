@@ -3,16 +3,7 @@ const cors = require('cors');
 const pool = require('./db');
 
 const app = express();
-app.use(cors({
-  origin: [
-    'http://localhost:5173',        // para desarrollo local
-    'https://runelinkfrontend.onrender.com' // ajusta esto al dominio real de tu frontend en Render
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
-app.options('*', cors()); 
+app.use(cors());
 app.use(express.json());
 
 
