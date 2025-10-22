@@ -98,6 +98,20 @@ app.post('/characters', async (req, res) => {
   }
 });
 
+app.get('/characters/user/:userId', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const result = await pool.query(
+      'SELECT * FROM Characters WHERE user_id = $1',
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching characters by user');
+  }
+});
+
 app.get('/characters', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM Characters');
