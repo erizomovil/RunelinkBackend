@@ -134,7 +134,7 @@ app.get('/characters/:id', async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT * FROM Characters WHERE id = $1',
+      'SELECT * FROM Characters WHERE character_id = $1',
       [id]
     );
 
