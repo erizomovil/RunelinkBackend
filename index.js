@@ -159,30 +159,67 @@ app.get('/characters', async (req, res) => {
   }
 });
 
-// --- ITEMS ---
-app.post('/items', async (req, res) => {
-  const { name, quantity, weight, character_id } = req.body;
+// --- INVENTORY / ITEMS ---
+
+// Obtener todos los items de un personaje
+app.get('/characters/:characterId/items', async (req, res) => {
+  const { characterId } = req.params;
   try {
     const result = await pool.query(
-      'INSERT INTO Items (name, quantity, weight, character_id) VALUES ($1,$2,$3,$4) RETURNING *',
-      [name, quantity, weight, character_id]
+      'SELECT * FROM Items WHERE character_id = $1 ORDER BY id DESC',
+      [characterId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching character items:", err);
+    res.status(500).send('Error fetching character items');
+  }
+});
+
+// Añadir un nuevo item al personaje
+app.post('/characters/:characterId/items', async (req, res) => {
+  const { characterId } = req.params;
+  const { name, quantity, weight } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO Items (name, quantity, weight, character_id) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, quantity, weight, characterId]
     );
     res.json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error("Error creating item:", err);
     res.status(500).send('Error creating item');
   }
 });
 
-app.get('/items', async (req, res) => {
+// Actualizar un item existente
+app.put('/items/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity, weight } = req.body;
   try {
-    const result = await pool.query('SELECT * FROM Items');
-    res.json(result.rows);
+    const result = await pool.query(
+      'UPDATE Items SET name = $1, quantity = $2, weight = $3 WHERE id = $4 RETURNING *',
+      [name, quantity, weight, id]
+    );
+    res.json(result.rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Error fetching items');
+    console.error("Error updating item:", err);
+    res.status(500).send('Error updating item');
   }
 });
+
+// Eliminar un item
+app.delete('/items/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM Items WHERE id = $1', [id]);
+    res.json({ message: 'Item deleted successfully' });
+  } catch (err) {
+    console.error("Error deleting item:", err);
+    res.status(500).send('Error deleting item');
+  }
+});
+
 
 // --- SESSIONS ---
 app.post('/sessions', async (req, res) => {
