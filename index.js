@@ -166,7 +166,7 @@ app.get('/characters/:characterId/items', async (req, res) => {
   const { characterId } = req.params;
   try {
     const result = await pool.query(
-      'SELECT * FROM Items WHERE character_id = $1 ORDER BY id DESC',
+      'SELECT * FROM Items WHERE character_id = $1 ORDER BY item_id DESC',
       [characterId]
     );
     res.json(result.rows);
@@ -198,7 +198,7 @@ app.put('/items/:id', async (req, res) => {
   const { name, quantity, weight } = req.body;
   try {
     const result = await pool.query(
-      'UPDATE Items SET name = $1, quantity = $2, weight = $3 WHERE id = $4 RETURNING *',
+      'UPDATE Items SET name = $1, quantity = $2, weight = $3 WHERE item_id = $4 RETURNING *',
       [name, quantity, weight, id]
     );
     res.json(result.rows[0]);
@@ -212,7 +212,7 @@ app.put('/items/:id', async (req, res) => {
 app.delete('/items/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    await pool.query('DELETE FROM Items WHERE id = $1', [id]);
+    await pool.query('DELETE FROM Items WHERE item_id = $1', [id]);
     res.json({ message: 'Item deleted successfully' });
   } catch (err) {
     console.error("Error deleting item:", err);
