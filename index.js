@@ -129,6 +129,80 @@ app.get('/characters/user/:userId', async (req, res) => {
   }
 });
 
+app.put('/characters/:id', async (req, res) => {
+  const { id } = req.params;
+  const {
+    name,
+    level,
+    class: charClass,
+    subclass,
+    experience,
+    health,
+    speed,
+    armor,
+    broams,
+    chips,
+    rucks,
+    frost,
+    frags,
+    photo,
+    group_id,
+    user_id
+  } = req.body;
+
+  try {
+    const result = await pool.query(
+      `UPDATE Characters
+       SET name = $1,
+           level = $2,
+           class = $3,
+           subclass = $4,
+           experience = $5,
+           health = $6,
+           speed = $7,
+           armor = $8,
+           broams = $9,
+           chips = $10,
+           rucks = $11,
+           frost = $12,
+           frags = $13,
+           photo = $14,
+           group_id = $15,
+           user_id = $16
+       WHERE character_id = $17
+       RETURNING *`,
+      [
+        name,
+        level,
+        charClass,
+        subclass,
+        experience,
+        health,
+        speed,
+        armor,
+        broams,
+        chips,
+        rucks,
+        frost,
+        frags,
+        photo,
+        group_id,
+        user_id,
+        character_id
+      ]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).send('Character not found');
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Error updating character:", err);
+    res.status(500).send('Error updating character');
+  }
+});
+
 app.get('/characters/:id', async (req, res) => {
   const { id } = req.params;
 
