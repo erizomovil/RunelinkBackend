@@ -188,7 +188,7 @@ app.put('/characters/:id', async (req, res) => {
         photo,
         group_id,
         user_id,
-        character_id
+        id
       ]
     );
 
